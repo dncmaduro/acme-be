@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
+const cors = require('cors');
 
 const app = express();
 const port = 3000;
@@ -11,6 +12,12 @@ const port = 3000;
 // Middleware
 app.use(bodyParser.json());
 app.use(cookieParser());
+
+// Enable CORS
+app.use(cors({
+  origin: 'http://localhost:3001', // Replace with your frontend URL
+  credentials: true, // Allow credentials (cookies) to be sent
+}));
 
 const SECRET_KEY = 'your_secret_key'; // Replace with your own secret key
 
@@ -52,7 +59,7 @@ const generateToken = (email) => {
 
 // Function to authenticate token from cookies
 const authenticateToken = (req, res, next) => {
-  const token = req.cookies.token;
+  const token = req.cookies['acme-token'];
 
   if (!token) {
     return res.status(401).json({ message: 'Unauthorized' });
